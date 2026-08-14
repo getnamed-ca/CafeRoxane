@@ -23,7 +23,7 @@ const I18N = {
     "find.eyebrow":"find us","find.title":"Come Visit",
     "find.wk":"Monday – Friday","find.we":"Saturday – Sunday",
     "find.cta":"Reserve the room for an event",
-    "slogan.sub":"Written on our window, meant from the heart",
+    "slogan.sub":"Written on our window",
     "footer.rights":"© 2026 Café Roxane. All rights reserved.",
     "modal.eyebrow":"free to book","modal.title":"Reserve the room",
     "modal.sub":"Tell us about your gathering: jam session, tech meetup, science night, anything. The space is free; you and your guests just eat and drink with us. We'll confirm by email.",
@@ -67,7 +67,7 @@ const I18N = {
     "find.eyebrow":"nous trouver","find.title":"Venez Nous Voir",
     "find.wk":"Lundi – Vendredi","find.we":"Samedi – Dimanche",
     "find.cta":"Réserver le salon pour un événement",
-    "slogan.sub":"Écrit sur notre vitrine, senti du fond du cœur",
+    "slogan.sub":"Écrit sur notre vitrine",
     "footer.rights":"© 2026 Café Roxane. Tous droits réservés.",
     "modal.eyebrow":"réservation gratuite","modal.title":"Réservez le salon",
     "modal.sub":"Parlez-nous de votre rassemblement : jam, meetup techno, soirée science, peu importe. L'espace est gratuit ; vous et vos invités mangez et buvez avec nous. Confirmation par courriel.",
@@ -165,6 +165,7 @@ try { lang = localStorage.getItem("roxane-lang") || "en"; } catch(e){}
 const $  = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isTouch = matchMedia("(pointer: coarse)").matches || matchMedia("(max-width: 900px)").matches;
 
 /* ============ render menu (category tabs, like the original site) ============ */
 const CATS = [...MENU.drinks, ...MENU.food];
@@ -290,6 +291,8 @@ const followIO = new IntersectionObserver(entries=>{
   entries.forEach(en=>{ if(en.isIntersecting){ maybeShowFollow(); followIO.disconnect(); } });
 },{threshold:.5});
 followIO.observe($("#slogan"));
+/* first visit: the popup also greets shortly after the cookie box */
+if(!followSeen) setTimeout(maybeShowFollow, 5000);
 $("#followClose").addEventListener("click",()=>followModal.close());
 $("#followNo").addEventListener("click",()=>followModal.close());
 followModal.addEventListener("click",e=>{ if(e.target === followModal) followModal.close(); });
@@ -349,17 +352,23 @@ window.addEventListener("load",()=>{
   const heroLogo  = $("#heroLogo");
   const logoSlot  = $("#logoSlot");
 
-  /* scrub video time with scroll */
+  /* desktop: scrub video time with scroll. touch/mobile: iOS blocks reliable scrubbing,
+     so the clip simply autoplays on a loop instead */
   const scrubVideo = ()=> {
-    if(!heroVideo.duration) return;
+    if(isTouch || !heroVideo.duration) return;
     const st = ScrollTrigger.getById("heroPin");
     if(st) heroVideo.currentTime = Math.min(heroVideo.duration - 0.05, heroVideo.duration * st.progress * 0.92);
   };
   heroVideo.addEventListener("loadedmetadata",()=>{ heroVideo.currentTime = 0; });
+  if(isTouch){
+    heroVideo.loop = true;
+    heroVideo.play().catch(()=>{});
+    document.addEventListener("touchstart",()=>heroVideo.play().catch(()=>{}),{once:true,passive:true});
+  }
 
   const heroTl = gsap.timeline({
     scrollTrigger:{
-      id:"heroPin", trigger:"#hero", start:"top top", end:"+=220%",
+      id:"heroPin", trigger:"#hero", start:"top top", end:isTouch?"+=120%":"+=220%",
       scrub:0.6, pin:true, anticipatePin:1, onUpdate:scrubVideo
     }
   });
@@ -369,10 +378,8 @@ window.addEventListener("load",()=>{
     {opacity:0,letterSpacing:".95em"},
     {opacity:1,letterSpacing:".25em",duration:1.2,delay:.5,ease:"power2.out"});
 
-  /* the moment scrolling starts: scrim lifts, logo darts to the corner, tagline vanishes */
+  /* vignette deepens gradually with the scrub */
   heroTl
-    .to("#heroScrim",{opacity:0,duration:.12,ease:"none"},0)
-    .to("#heroTagline",{opacity:0,y:-24,duration:.07,overwrite:"auto"},0)
     .to("#heroArrow",{opacity:0,duration:.05},0)
     .to("#heroVignette",{opacity:1,duration:.3,ease:"none"},.1);
 
@@ -387,17 +394,18 @@ window.addEventListener("load",()=>{
     return {dx,dy,scale};
   };
   let t = positionLogo();
-  const logoTween = gsap.fromTo(heroLogo,
-    {x:0,y:0,scale:1},
-    {x:()=>t.dx, y:()=>t.dy, scale:()=>t.scale, ease:"power2.out", immediateRender:false,
-     scrollTrigger:{trigger:"#hero", start:"top top", end:"+=30%", scrub:0.4}});
-  addEventListener("resize",()=>{ t = positionLogo(); logoTween.scrollTrigger.refresh(); logoTween.invalidate(); });
-
-  /* after hero: clone logo into header slot for the rest of the page */
+  /* time-based dock: plays the instant scrolling starts, done in under a second,
+     guaranteed before the scroll video's 2nd second regardless of scroll speed */
+  const dockTl = gsap.timeline({paused:true, onComplete:dockLogoStatic})
+    .to("#heroScrim",{opacity:0,duration:.5,ease:"power1.out"},0)
+    .to("#heroTagline",{opacity:0,y:-24,duration:.3,overwrite:"auto"},0)
+    .to(heroLogo,{x:()=>t.dx, y:()=>t.dy, scale:()=>t.scale, duration:.9, ease:"power3.inOut"},0);
   ScrollTrigger.create({
-    trigger:"#story", start:"top 70%",
-    onEnter:dockLogoStatic, onLeaveBack:undockLogoStatic
+    start:8, end:99999, /* absolute scroll offsets: unaffected by the hero pin's spacer */
+    onEnter:()=>dockTl.play(),
+    onLeaveBack:()=>{ undockLogoStatic(); dockTl.reverse(); }
   });
+  addEventListener("resize",()=>{ t = positionLogo(); dockTl.invalidate(); });
 
   /* --- masked word-by-word title reveals --- */
   if(window.SplitText){
@@ -441,8 +449,8 @@ window.addEventListener("load",()=>{
   gsap.to("#slogan .spoons",{rotation:150,ease:"none",
     scrollTrigger:{trigger:"#slogan",start:"top bottom",end:"bottom top",scrub:1}});
 
-  /* --- slow parallax on media sections --- */
-  $$(".parallax-media").forEach(m=>{
+  /* --- slow parallax on media sections (desktop only: mobile shows videos inline, whole frame) --- */
+  if(!isTouch) $$(".parallax-media").forEach(m=>{
     gsap.fromTo(m,{yPercent:-8},{yPercent:8,ease:"none",
       scrollTrigger:{trigger:m.parentElement,start:"top bottom",end:"bottom top",scrub:0.5}});
   });

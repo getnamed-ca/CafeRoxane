@@ -100,7 +100,7 @@ dialog .btn-reserve:hover{color:#fff;box-shadow:0 8px 22px rgba(194,43,33,.35)}
 .hero-scrim{position:absolute;inset:0;background:var(--bg)}
 .hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(35,25,19,.45) 100%);opacity:0}
 .hero-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;padding:0 1.5rem}
-.hero-logo{width:min(72vw,540px);will-change:transform}
+.hero-logo{width:min(72vw,540px);will-change:transform;position:relative;z-index:950}
 .hero-tagline{font-family:var(--serif);font-size:clamp(1rem,2.2vw,1.5rem);font-weight:300;font-style:italic;
   letter-spacing:.6em;text-transform:uppercase;color:var(--cream);opacity:0;white-space:nowrap;text-shadow:0 1px 12px rgba(0,0,0,.5)}
 .hero-tagline .amp{color:var(--ember-bright)}
@@ -121,7 +121,7 @@ dialog .btn-reserve:hover{color:#fff;box-shadow:0 8px 22px rgba(194,43,33,.35)}
 
 /* ---------- menu ---------- */
 #menu{padding:8rem 0 7rem;position:relative;overflow:hidden}
-.bg-spoons{position:absolute;top:8%;right:-14%;width:44vw;max-width:640px;opacity:.05;pointer-events:none;
+.bg-spoons{position:absolute;top:75%;left:50%;transform:translate(-50%,-50%);width:38vw;max-width:560px;opacity:.05;pointer-events:none;
   filter:invert(92%) sepia(8%) saturate(300%) hue-rotate(340deg)}
 .wrap{max-width:1200px;margin:0 auto;padding:0 clamp(1.5rem,5vw,3rem);position:relative;z-index:1}
 .menu-head{text-align:center;margin-bottom:3rem}
@@ -192,6 +192,7 @@ address{font-style:normal;font-family:var(--serif);font-size:clamp(1.3rem,2.2vw,
 .slogan-text{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(2rem,6vw,4.6rem);
   letter-spacing:.14em;line-height:1.25;color:var(--cream)}
 .slogan-text .em{color:var(--ember-bright);font-style:normal;font-weight:500}
+.slogan-line2{display:block;font-size:.45em;letter-spacing:.3em;margin-top:.55em;color:rgba(250,246,240,.8)}
 .slogan-sub{margin-top:1.8rem;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(250,246,240,.55)}
 footer{background:var(--bg-footer);color:rgba(250,246,240,.75);border-top:1px solid rgba(250,246,240,.12);padding:3rem 1.5rem;text-align:center;font-size:.8rem}
 footer .f-logo{height:44px;margin:0 auto 1.2rem}
@@ -293,6 +294,13 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
 /* ---------- responsive ---------- */
 @media (max-width:900px){
   nav,.header-right .lang-toggle,.header-right .btn-reserve,.header-right .socials{display:none}
+  .header-right{margin-left:auto} /* hamburger pinned to the right edge */
+  .hero-tagline{display:none}     /* no tagline on mobile */
+  /* story & private sections: video shown whole (16:9), text below */
+  .media-section{display:block;min-height:0}
+  .media-bg{position:relative;inset:auto;width:100%;aspect-ratio:16/9;height:auto}
+  .media-overlay{display:none}
+  .media-content{padding:2.5rem 1.5rem 4.5rem}
   .burger{display:flex}
   .mobile-menu{display:block;position:fixed;inset:0;z-index:880;background:var(--bg);
     padding:6.5rem 2rem 2rem;transform:translateY(-102%);transition:transform .45s cubic-bezier(.6,.05,.2,1)}
@@ -317,8 +325,14 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
   .menu-item{font-size:.78rem;padding:.5rem 0}
   .field-row,.space-opts{grid-template-columns:1fr}
   .hero-tagline{letter-spacing:.35em;font-size:.85rem}
-  .car-item{height:46vh}
-  .car-arrow{width:46px;height:46px}
+  /* zoom gallery: bigger frames for small screens */
+  .zp-frame{width:58vw;height:20vh}
+  .zp-item:nth-child(2) .zp-frame{top:-26vh;left:8vw;height:22vh;width:64vw}
+  .zp-item:nth-child(3) .zp-frame{top:-8vh;left:-32vw;height:30vh;width:36vw}
+  .zp-item:nth-child(4) .zp-frame{left:38vw;height:18vh;width:40vw}
+  .zp-item:nth-child(5) .zp-frame{top:24vh;left:10vw;height:18vh;width:36vw}
+  .zp-item:nth-child(6) .zp-frame{top:24vh;left:-28vw;height:18vh;width:44vw}
+  .zp-item:nth-child(7) .zp-frame{top:20vh;left:34vw;height:12vh;width:26vw}
 }
 </style>
 </head>
@@ -497,8 +511,8 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
 <!-- SLOGAN -->
 <section id="slogan" aria-label="God Bless Our Moms">
   <img class="spoons" src="assets/web/spoons.png" alt="" aria-hidden="true">
-  <p class="slogan-text" id="sloganText">God <span class="em">Bless</span> Our Moms</p>
-  <p class="slogan-sub" data-i18n="slogan.sub">Written on our window, meant from the heart</p>
+  <p class="slogan-text" id="sloganText">God <span class="em">Bless</span> Our Moms<span class="slogan-line2">Meant from the heart</span></p>
+  <p class="slogan-sub" data-i18n="slogan.sub">Written on our window</p>
 </section>
 
 <footer>
