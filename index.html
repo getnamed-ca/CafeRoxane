@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Café Roxane | Mile End, Montréal</title>
+<meta name="description" content="Café Roxane, a cozy neighborhood café in Mile End, Montréal. Coffee, pastries, and a terrace worth lingering on. Un café chaleureux au cœur du Mile End.">
+<meta property="og:title" content="Café Roxane | Mile End, Montréal">
+<meta property="og:description" content="Relax · Sip · Enjoy. The neighbourhood's front room in Mile End, Montréal.">
+<meta property="og:type" content="website">
+<link id="favicon" rel="icon" type="image/gif" href="assets/web/favicon.gif">
+<link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Fraunces";font-style:normal;font-weight:100 900;font-display:swap;src:url("assets/fonts/fraunces-latin-wght-normal.woff2") format("woff2")}
+@font-face{font-family:"Fraunces";font-style:italic;font-weight:100 900;font-display:swap;src:url("assets/fonts/fraunces-latin-wght-italic.woff2") format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:swap;src:url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2")}
+:root{
+  --cream:#FAF6F0;
+  --espresso:#2B211B;
+  --deep:#231913;
+  --bg:#0B0908;         /* warm black site background */
+  --bg-footer:#000;
+  --ember:#E8611C;
+  --ember-bright:#FF7700;
+  --terracotta:#C1663B;
+  --terracotta-lt:#D98B5F;
+  --red:#C22B21;
+  --line:rgba(193,102,59,.3);
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Inter",-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+h1,h2,h3,.serif{font-family:var(--serif)}
+.eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--ember-bright)}
+dialog .eyebrow{color:var(--ember)}
+.section-title{font-size:clamp(2.4rem,5.4vw,4.2rem);font-weight:500;line-height:1.08;letter-spacing:.01em;margin:.6rem 0 1rem}
+
+/* ---------- film grain ---------- */
+.grain{position:fixed;inset:-100%;width:300%;height:300%;pointer-events:none;z-index:1200;opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-3%,-5%)}20%{transform:translate(5%,3%)}30%{transform:translate(-4%,4%)}40%{transform:translate(3%,-6%)}50%{transform:translate(-5%,2%)}60%{transform:translate(6%,5%)}70%{transform:translate(-2%,-3%)}80%{transform:translate(4%,2%)}90%{transform:translate(-6%,-4%)}}
+
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:900;height:72px;display:flex;align-items:center;
+  padding:0 clamp(1rem,4vw,2.5rem);gap:2rem;
+  background:rgba(11,9,8,0);border-bottom:1px solid transparent;
+  transition:background .45s ease,border-color .45s ease}
+header.solid{background:rgba(11,9,8,.9);backdrop-filter:blur(10px);border-color:rgba(250,246,240,.1)}
+.logo-slot{width:150px;height:52px;flex:none;position:relative}
+.logo-slot a{position:absolute;inset:0;display:block}
+nav{margin-left:auto}
+nav ul{display:flex;list-style:none;gap:clamp(1.1rem,2.4vw,2.2rem);align-items:center}
+nav a{font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:lowercase;text-decoration:none;
+  padding:.35rem 0;position:relative;color:var(--cream)}
+nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ember);transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
+nav a:hover,nav a:focus-visible{color:var(--ember-bright)}
+nav a{transition:color .3s ease}
+.header-right{display:flex;align-items:center;gap:1.1rem}
+.lang-toggle{display:flex;font-size:.78rem;align-items:center;color:var(--cream);
+  border:1px solid rgba(250,246,240,.25);border-radius:999px;padding:3px;gap:2px}
+.lang-toggle > span{display:none}
+.lang-toggle button{background:none;border:none;font-weight:600;font-size:.75rem;letter-spacing:.04em;
+  color:rgba(250,246,240,.6);padding:.38rem .75rem;border-radius:999px;transition:color .3s,background .3s}
+.lang-toggle button:hover{color:var(--cream)}
+.lang-toggle button[aria-pressed="true"]{background:var(--cream);color:#0B0908;font-weight:700}
+.btn-reserve{position:relative;overflow:hidden;isolation:isolate;background:transparent;color:var(--cream);
+  border:1px solid var(--ember-bright);border-radius:999px;
+  font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  padding:.8rem 1.7rem;min-height:44px;transition:color .35s ease,box-shadow .35s ease}
+.btn-reserve::before{content:"";position:absolute;inset:-1px;z-index:-1;background:linear-gradient(90deg,var(--red),var(--ember-bright));
+  transform:translateX(-101%);transition:transform .45s cubic-bezier(.6,.05,.2,1);border-radius:999px}
+.btn-reserve:hover{color:#0B0908;box-shadow:0 10px 32px rgba(255,119,0,.3)}
+.btn-reserve:hover::before{transform:translateX(0)}
+.btn-reserve:focus-visible{outline:3px solid var(--ember-bright);outline-offset:2px}
+/* modal keeps a filled CTA on cream */
+dialog .btn-reserve{background:var(--red);color:#fff;border-color:var(--red)}
+dialog .btn-reserve:hover{color:#fff;box-shadow:0 8px 22px rgba(194,43,33,.35)}
+.socials{display:flex;gap:.15rem;align-items:center}
+.social-link{color:rgba(250,246,240,.55);display:flex;width:40px;height:40px;align-items:center;justify-content:center;
+  border-radius:50%;transition:color .3s ease,transform .3s ease,background .3s ease}
+.social-link:hover,.social-link:focus-visible{color:var(--ember-bright);transform:translateY(-2px) scale(1.1);
+  background:rgba(255,119,0,.12);filter:drop-shadow(0 4px 14px rgba(255,119,0,.4))}
+.social-link:focus-visible{outline:2px solid var(--ember-bright);outline-offset:2px}
+.burger{display:none;background:none;border:none;width:44px;height:44px;flex-direction:column;justify-content:center;gap:6px;align-items:center}
+.burger span{display:block;width:24px;height:2px;background:var(--cream);transition:transform .3s,opacity .3s}
+.mobile-menu{display:none}
+
+/* ---------- hero ---------- */
+#hero{position:relative;height:100vh;overflow:hidden}
+.hero-media{position:absolute;inset:0}
+.hero-media video,.hero-media img{width:100%;height:100%;object-fit:cover}
+.hero-scrim{position:absolute;inset:0;background:var(--bg)}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(35,25,19,.45) 100%);opacity:0}
+.hero-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem;padding:0 1.5rem}
+.hero-logo{width:min(72vw,540px);will-change:transform}
+.hero-tagline{font-family:var(--serif);font-size:clamp(1rem,2.2vw,1.5rem);font-weight:300;font-style:italic;
+  letter-spacing:.6em;text-transform:uppercase;color:var(--cream);opacity:0;white-space:nowrap;text-shadow:0 1px 12px rgba(0,0,0,.5)}
+.hero-tagline .amp{color:var(--ember-bright)}
+.hero-arrow{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
+  background:none;border:none;font-size:1.5rem;color:var(--ember-bright);animation:bob 2.2s ease-in-out infinite;padding:.5rem 1rem}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,10px)}}
+
+/* ---------- media sections (story / private) ---------- */
+.media-section{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;color:var(--cream)}
+.media-bg{position:absolute;inset:-12% 0;z-index:0}
+.media-bg video,.media-bg img{width:100%;height:100%;object-fit:cover}
+.media-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(35,25,19,.82) 0%,rgba(35,25,19,.55) 55%,rgba(35,25,19,.35) 100%)}
+.media-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:7rem clamp(1.5rem,5vw,3rem);width:100%}
+.media-content .eyebrow{color:var(--ember-bright)}
+.media-content h2{color:var(--cream)}
+.story-copy{max-width:34em;display:grid;gap:1.4rem;font-size:1.02rem;font-weight:400;line-height:1.95;color:rgba(250,246,240,.92)}
+.story-sign{margin-top:2.4rem;font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ember-bright)}
+
+/* ---------- menu ---------- */
+#menu{padding:8rem 0 7rem;position:relative;overflow:hidden}
+.bg-spoons{position:absolute;top:8%;right:-14%;width:44vw;max-width:640px;opacity:.05;pointer-events:none;
+  filter:invert(92%) sepia(8%) saturate(300%) hue-rotate(340deg)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(1.5rem,5vw,3rem);position:relative;z-index:1}
+.menu-head{text-align:center;margin-bottom:3rem}
+.menu-tabs{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;margin-bottom:3.2rem}
+.menu-tab{background:none;border:1px solid rgba(250,246,240,.18);border-radius:999px;color:rgba(250,246,240,.62);
+  font-family:var(--sans);font-size:.8rem;font-weight:600;letter-spacing:.05em;padding:.55rem 1.15rem;min-height:44px;
+  transition:color .3s,border-color .3s,background .3s,transform .3s;cursor:pointer}
+.menu-tab:hover{color:var(--cream);border-color:rgba(250,246,240,.45);transform:translateY(-1px)}
+.menu-tab:focus-visible{outline:3px solid var(--ember-bright);outline-offset:2px}
+.menu-tab[aria-selected="true"]{color:#0B0908;background:var(--ember-bright);border-color:var(--ember-bright);font-weight:700}
+.menu-items{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(1.8rem,5vw,4.5rem);max-width:880px;margin:0 auto;min-height:19rem;align-content:start}
+.menu-side{position:absolute;top:6rem;bottom:3rem;width:13vw;max-width:230px;pointer-events:none;z-index:0}
+.menu-side.left{left:1.8vw}
+.menu-side.right{right:1.8vw}
+.menu-side img{position:absolute;width:100%;border-radius:4px;box-shadow:0 14px 44px rgba(0,0,0,.55)}
+.menu-side.left img:nth-child(1){top:6%;transform:rotate(-4deg)}
+.menu-side.left img:nth-child(2){top:40%;transform:rotate(3deg)}
+.menu-side.left img:nth-child(3){top:72%;transform:rotate(-2deg)}
+.menu-side.right img:nth-child(1){top:10%;transform:rotate(3deg)}
+.menu-side.right img:nth-child(2){top:44%;transform:rotate(-3deg)}
+.menu-side.right img:nth-child(3){top:74%;transform:rotate(2deg)}
+@media (max-width:1100px){.menu-side{display:none}}
+.menu-item{display:flex;align-items:baseline;padding:.55rem 0;font-size:.95rem;border-bottom:1px solid rgba(250,246,240,.07)}
+.menu-item .n{font-weight:500;white-space:normal;padding-right:.6rem}
+.menu-item .dots{flex:1;border-bottom:1px dotted var(--line);transform:translateY(-4px);min-width:1.2rem}
+.menu-item .p{font-weight:600;color:var(--ember-bright);padding-left:.6rem;font-variant-numeric:tabular-nums}
+
+/* ---------- gallery zoom parallax (21st.dev style, GSAP port) ---------- */
+#gallery{padding:7rem 0 0}
+.gal-head{text-align:center;margin-bottom:3.5rem}
+.zoom-wrap{position:relative;height:300vh}
+.zoom-sticky{height:100vh;overflow:hidden;position:relative}
+.zp-item{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;will-change:transform}
+.zp-frame{position:relative;width:25vw;height:25vh}
+.zp-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.zp-item:nth-child(2) .zp-frame{top:-30vh;left:5vw;height:30vh;width:35vw}
+.zp-item:nth-child(3) .zp-frame{top:-10vh;left:-25vw;height:45vh;width:20vw}
+.zp-item:nth-child(4) .zp-frame{left:27.5vw;height:25vh;width:25vw}
+.zp-item:nth-child(5) .zp-frame{top:27.5vh;left:5vw;height:25vh;width:20vw}
+.zp-item:nth-child(6) .zp-frame{top:27.5vh;left:-22.5vw;height:25vh;width:30vw}
+.zp-item:nth-child(7) .zp-frame{top:22.5vh;left:25vw;height:15vh;width:15vw}
+
+/* ---------- private dining ---------- */
+#private .media-overlay{background:linear-gradient(280deg,rgba(35,25,19,.85) 0%,rgba(35,25,19,.5) 60%,rgba(35,25,19,.3) 100%)}
+#private .media-content{display:flex;justify-content:flex-end}
+.private-box{max-width:34em}
+.private-list{list-style:none;margin:1.6rem 0 2.2rem;display:grid;gap:.8rem}
+.private-list li{display:flex;gap:.8rem;align-items:baseline;font-size:1rem;line-height:1.7;color:rgba(250,246,240,.92)}
+.private-list li::before{content:"";width:8px;height:8px;flex:none;background:var(--ember-bright);border-radius:50%;transform:translateY(-1px)}
+
+/* ---------- find us ---------- */
+#findus{padding:8rem 0}
+.findus-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(2rem,6vw,5rem);align-items:start;margin-top:3.5rem}
+.hours{border-top:2px solid var(--ember);padding-top:1.6rem;margin-top:1.6rem;display:grid;gap:.55rem}
+.hours p{display:flex;justify-content:space-between;gap:1rem;font-size:.95rem;max-width:26em}
+.hours .d{font-weight:600}
+address{font-style:normal;font-family:var(--serif);font-size:clamp(1.3rem,2.2vw,1.7rem);line-height:1.5}
+.contact-links{margin-top:1.8rem;display:grid;gap:.4rem;font-size:.95rem}
+.contact-links a{text-decoration:none;font-weight:600;border-bottom:1px solid transparent;width:fit-content;transition:border-color .3s}
+.contact-links a:hover{border-color:var(--ember-bright)}
+.map-box{border:1px solid var(--line);aspect-ratio:4/3;overflow:hidden;border-radius:2px}
+.map-box iframe{width:100%;height:100%;border:0;display:block}
+.findus-cta{margin-top:2.4rem}
+
+/* ---------- slogan / footer ---------- */
+#slogan{background:var(--bg-footer);color:var(--cream);text-align:center;padding:9rem 1.5rem;position:relative;overflow:hidden}
+#slogan .spoons{width:74px;margin:0 auto 2.6rem;opacity:.9;filter:invert(92%) sepia(8%) saturate(300%) hue-rotate(340deg)}
+.slogan-text{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(2rem,6vw,4.6rem);
+  letter-spacing:.14em;line-height:1.25;color:var(--cream)}
+.slogan-text .em{color:var(--ember-bright);font-style:normal;font-weight:500}
+.slogan-sub{margin-top:1.8rem;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(250,246,240,.55)}
+footer{background:var(--bg-footer);color:rgba(250,246,240,.75);border-top:1px solid rgba(250,246,240,.12);padding:3rem 1.5rem;text-align:center;font-size:.8rem}
+footer .f-logo{height:44px;margin:0 auto 1.2rem}
+footer p{margin:.3rem 0}
+footer a{color:inherit;transition:color .3s ease}
+footer a:hover,footer a:focus-visible{color:var(--ember-bright)}
+.contact-links a{transition:color .3s ease,border-color .3s ease}
+.contact-links a:hover{color:var(--ember-bright)}
+
+/* ---------- modal ---------- */
+dialog{border:none;border-radius:4px;padding:0;background:var(--cream);color:var(--espresso);
+  width:min(560px,92vw);max-height:88vh;overflow:auto;box-shadow:0 30px 80px rgba(35,25,19,.5);
+  position:fixed;inset:0;margin:auto}
+dialog::backdrop{background:rgba(35,25,19,.65);backdrop-filter:blur(3px)}
+.modal-inner{padding:clamp(1.6rem,4vw,2.6rem)}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.4rem}
+.modal-head h3{font-size:1.7rem;font-weight:500}
+.modal-close{background:none;border:none;font-size:1.6rem;line-height:1;color:var(--terracotta);padding:.4rem;min-width:44px;min-height:44px}
+.modal-sub{font-size:.9rem;color:#6b5d52;margin-bottom:1.6rem;max-width:38em}
+form .field{margin-bottom:1.15rem}
+form label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;color:var(--espresso)}
+form input,form select,form textarea{width:100%;padding:.7rem .85rem;font-family:inherit;font-size:1rem;color:var(--espresso);
+  background:#fff;border:1px solid var(--line);border-radius:3px;min-height:44px}
+form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.space-opt input:focus-visible+span{outline:3px solid var(--ember);outline-offset:1px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.space-opts{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.space-opt input{position:absolute;opacity:0;pointer-events:none}
+.space-opt span{display:flex;flex-direction:column;gap:.15rem;padding:.8rem .9rem;border:1px solid var(--line);border-radius:3px;
+  font-size:.9rem;font-weight:600;cursor:pointer;transition:border-color .25s,background .25s;min-height:44px;text-transform:none;letter-spacing:0}
+.space-opt small{font-weight:400;font-size:.75rem;color:#6b5d52}
+.space-opt input:checked+span{border-color:var(--ember);background:rgba(232,97,28,.07)}
+.modal-submit{width:100%;margin-top:.6rem}
+.form-note{font-size:.75rem;color:#6b5d52;margin-top:.9rem;text-align:center}
+.confirm{display:none;text-align:center;padding:2rem 0 1rem}
+.confirm h4{font-family:var(--serif);font-size:1.6rem;font-weight:500;margin-bottom:.8rem}
+.confirm p{font-size:.95rem;max-width:30em;margin:0 auto .6rem}
+.confirm .spoons{width:56px;margin:0 auto 1.4rem}
+
+/* ---------- follow popup ---------- */
+#followModal{background:#171310;color:var(--cream);width:min(720px,94vw);border:1px solid rgba(255,119,0,.25)}
+.follow-grid{display:grid;grid-template-columns:260px 1fr}
+.follow-img{height:100%;min-height:340px}
+.follow-img img{width:100%;height:100%;object-fit:cover;display:block}
+.follow-body{padding:clamp(1.6rem,4vw,2.6rem);display:flex;flex-direction:column;justify-content:center;gap:1rem;position:relative}
+.follow-body .eyebrow{color:var(--ember-bright)}
+.follow-body h3{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:500;line-height:1.15}
+.follow-body p{font-size:.92rem;color:rgba(250,246,240,.85);line-height:1.7;max-width:30em}
+.follow-btns{display:flex;flex-direction:column;gap:.7rem;margin-top:.4rem}
+.btn-follow{display:flex;align-items:center;justify-content:center;gap:.6rem;border-radius:999px;
+  font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  padding:.85rem 1.4rem;min-height:48px;transition:transform .25s,box-shadow .25s,background .3s,color .3s}
+.btn-follow.ig{background:var(--ember-bright);color:#0B0908;border:1px solid var(--ember-bright)}
+.btn-follow.ig:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,119,0,.4)}
+.btn-follow.fb{background:transparent;color:var(--cream);border:1px solid rgba(250,246,240,.4)}
+.btn-follow.fb:hover{border-color:var(--cream);transform:translateY(-2px)}
+.btn-follow:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+.follow-no{background:none;border:none;color:rgba(250,246,240,.55);font-size:.78rem;text-decoration:underline;
+  text-underline-offset:3px;margin-top:.4rem;align-self:center;min-height:44px}
+.follow-no:hover{color:var(--cream)}
+.follow-close{position:absolute;top:.6rem;right:.6rem;background:none;border:none;font-size:1.5rem;line-height:1;
+  color:rgba(250,246,240,.6);min-width:44px;min-height:44px}
+.follow-close:hover{color:var(--cream)}
+@media (max-width:640px){
+  .follow-grid{grid-template-columns:1fr}
+  .follow-img{min-height:0;height:150px}
+}
+
+/* ---------- legal ---------- */
+.legal-links{margin-top:1rem}
+.legal-links button{background:none;border:none;color:rgba(250,246,240,.6);font-size:.75rem;
+  text-decoration:underline;text-underline-offset:3px;padding:.5rem .4rem;min-height:44px;transition:color .3s}
+.legal-links button:hover{color:var(--ember-bright)}
+#legalModal h4{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin:1.4rem 0 .5rem}
+#legalModal h4:first-of-type{margin-top:0}
+#legalModal p{font-size:.85rem;line-height:1.7;color:#4a3f36;margin-bottom:.6rem}
+
+/* ---------- cookie box ---------- */
+.cookie-box{position:fixed;left:1.2rem;bottom:1.2rem;z-index:1000;max-width:430px;width:calc(100vw - 2.4rem);
+  background:#171310;border:1px solid rgba(255,119,0,.28);border-radius:10px;padding:1.15rem 1.3rem;
+  display:flex;gap:1.1rem;align-items:center;box-shadow:0 20px 60px rgba(0,0,0,.6);
+  transform:translateY(160%);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.cookie-box.show{transform:none}
+.cookie-box p{font-size:.82rem;color:rgba(250,246,240,.88);line-height:1.55;margin:0}
+.cookie-box .spoon-mini{width:34px;flex:none;opacity:.85;filter:invert(92%) sepia(8%) saturate(300%) hue-rotate(340deg)}
+.cookie-ok{flex:none;background:var(--ember-bright);color:#0B0908;border:none;border-radius:999px;
+  font-size:.75rem;font-weight:700;letter-spacing:.08em;padding:.65rem 1.2rem;min-height:44px;
+  transition:transform .25s,box-shadow .25s}
+.cookie-ok:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(255,119,0,.35)}
+.cookie-ok:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(34px)}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none}
+  .grain,.hero-arrow{animation:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  nav,.header-right .lang-toggle,.header-right .btn-reserve,.header-right .socials{display:none}
+  .burger{display:flex}
+  .mobile-menu{display:block;position:fixed;inset:0;z-index:880;background:var(--bg);
+    padding:6.5rem 2rem 2rem;transform:translateY(-102%);transition:transform .45s cubic-bezier(.6,.05,.2,1)}
+  .mobile-menu.open{transform:translateY(0)}
+  .mobile-menu ul{list-style:none;display:grid;gap:1.4rem}
+  .mobile-menu a{font-family:var(--serif);font-size:1.6rem;text-decoration:none}
+  .mobile-menu .btn-reserve{display:inline-block;margin-top:1rem}
+  .mobile-menu .lang-toggle{display:flex;margin-top:2rem;font-size:1rem}
+  .mobile-menu .lang-toggle button{font-size:1rem}
+  .burger.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  .findus-grid{grid-template-columns:1fr}
+  #private .media-content{justify-content:flex-start}
+}
+@media (max-width:640px){
+  .menu-tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;
+    margin-inline:-1.5rem;padding-inline:1.5rem;padding-bottom:.6rem;scrollbar-width:none}
+  .menu-tabs::-webkit-scrollbar{display:none}
+  .menu-tab{flex:none}
+  .menu-items{grid-template-columns:1fr 1fr;gap:0 1.3rem}
+  .menu-item{font-size:.78rem;padding:.5rem 0}
+  .field-row,.space-opts{grid-template-columns:1fr}
+  .hero-tagline{letter-spacing:.35em;font-size:.85rem}
+  .car-item{height:46vh}
+  .car-arrow{width:46px;height:46px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header id="header">
+  <div class="logo-slot" id="logoSlot"><a href="#hero" aria-label="Café Roxane, back to top"></a></div>
+  <nav aria-label="Main">
+    <ul>
+      <li><a href="#story" data-i18n="nav.story">our story</a></li>
+      <li><a href="#menu" data-i18n="nav.menu">menu</a></li>
+      <li><a href="#gallery" data-i18n="nav.gallery">gallery</a></li>
+      <li><a href="#findus" data-i18n="nav.find">find us</a></li>
+    </ul>
+  </nav>
+  <div class="header-right">
+    <div class="socials">
+      <a class="social-link" href="https://www.instagram.com/roxane.cafe" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"></circle></svg>
+      </a>
+      <a class="social-link" href="https://www.facebook.com/people/Roxane-Cafe/61589557692946/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </div>
+    <div class="lang-toggle" role="group" aria-label="Language selection">
+      <button type="button" data-lang="en" aria-pressed="true">en</button><span aria-hidden="true">·</span><button type="button" data-lang="fr" aria-pressed="false">fr</button>
+    </div>
+    <button class="btn-reserve js-open-modal" data-i18n="nav.reserve">Reserve</button>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#story" data-i18n="nav.story">our story</a></li>
+    <li><a href="#menu" data-i18n="nav.menu">menu</a></li>
+    <li><a href="#gallery" data-i18n="nav.gallery">gallery</a></li>
+    <li><a href="#findus" data-i18n="nav.find">find us</a></li>
+  </ul>
+  <button class="btn-reserve js-open-modal" data-i18n="nav.reserve">Reserve</button>
+  <div class="lang-toggle" role="group" aria-label="Language selection">
+    <button type="button" data-lang="en" aria-pressed="true">en</button><span aria-hidden="true">·</span><button type="button" data-lang="fr" aria-pressed="false">fr</button>
+  </div>
+  <div class="socials" style="margin-top:1.6rem">
+    <a class="social-link" href="https://www.instagram.com/roxane.cafe" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"></circle></svg>
+    </a>
+    <a class="social-link" href="https://www.facebook.com/people/Roxane-Cafe/61589557692946/" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero" aria-label="Café Roxane">
+  <div class="hero-media">
+    <video id="heroVideo" src="assets/video/hero.mp4" poster="assets/video/hero_poster.jpg" muted playsinline preload="auto"></video>
+  </div>
+  <div class="hero-scrim" id="heroScrim"></div>
+  <div class="hero-vignette" id="heroVignette"></div>
+  <div class="hero-center">
+    <img class="hero-logo" id="heroLogo" src="assets/web/logo_light.svg" alt="Café Roxane" width="805" height="328">
+    <p class="hero-tagline" id="heroTagline"><span data-i18n="hero.relax">Relax</span> <span class="amp">·</span> <span data-i18n="hero.sip">Sip</span> <span class="amp">·</span> <span data-i18n="hero.enjoy">Enjoy</span></p>
+  </div>
+  <button class="hero-arrow" id="heroArrow" aria-label="Scroll down">↓</button>
+</section>
+
+<!-- STORY -->
+<section id="story" class="media-section" aria-labelledby="storyTitle">
+  <div class="media-bg parallax-media">
+    <video src="assets/video/story.mp4" poster="assets/video/story_poster.jpg" muted playsinline loop autoplay preload="metadata"></video>
+  </div>
+  <div class="media-overlay"></div>
+  <div class="media-content">
+    <p class="eyebrow reveal" data-i18n="story.eyebrow">our story</p>
+    <h2 class="section-title reveal" id="storyTitle">Roxane</h2>
+    <div class="story-copy">
+      <p class="reveal" data-i18n="story.p1">Roxane arrived in Canada in 1960 and never called anywhere else home but this neighborhood. From 1977 until 2014, she lived in this very building and helped run the small family business that once stood where you are today.</p>
+      <p class="reveal" data-i18n="story.p2">She knew everyone by name, welcomed all with warmth, and became a true pillar of the community. To many, Roxane was more than a familiar face. She was the heart of Mile End.</p>
+      <p class="reveal" data-i18n="story.p3">This café stands as an ode to her memory, her spirit, and the neighborhood she loved so deeply.</p>
+    </div>
+    <p class="story-sign reveal" data-i18n="story.sign">Roxane's corner of Mile End. Come see why.</p>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" aria-labelledby="menuTitle">
+  <img class="bg-spoons" id="menuSpoons" src="assets/web/spoons.png" alt="" aria-hidden="true">
+  <div class="menu-side left" aria-hidden="true">
+    <img src="assets/web/foccaccia_plated.webp" alt="" loading="lazy">
+    <img src="assets/web/bleubery_cheese_cake_plate.webp" alt="" loading="lazy">
+    <img src="assets/web/salon_sandwich_plate_blue.webp" alt="" loading="lazy">
+  </div>
+  <div class="menu-side right" aria-hidden="true">
+    <img src="assets/web/key_lime_pie.webp" alt="" loading="lazy">
+    <img src="assets/web/cafe_roxane_display_counter.webp" alt="" loading="lazy">
+    <img src="assets/web/focaccia_display.webp" alt="" loading="lazy">
+  </div>
+  <div class="wrap">
+    <div class="menu-head">
+      <p class="eyebrow reveal" data-i18n="menu.eyebrow">menu</p>
+      <h2 class="section-title reveal" id="menuTitle" data-i18n="menu.title">Our Creations</h2>
+    </div>
+    <div class="menu-tabs reveal" id="menuTabs" role="tablist" aria-label="Menu categories"><!-- built by JS --></div>
+    <div class="reveal"><div class="menu-items" id="menuItems"><!-- built by JS --></div></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" aria-labelledby="galTitle">
+  <div class="wrap">
+    <div class="gal-head">
+      <p class="eyebrow reveal" data-i18n="gal.eyebrow">gallery</p>
+      <h2 class="section-title reveal" id="galTitle" data-i18n="gal.title">Our World</h2>
+    </div>
+  </div>
+  <div class="zoom-wrap" id="zoomWrap">
+    <div class="zoom-sticky" id="zoomSticky"><!-- built by JS --></div>
+  </div>
+</section>
+
+<!-- PRIVATE / RESERVE THE ROOM -->
+<section id="private" class="media-section" aria-labelledby="privTitle">
+  <div class="media-bg parallax-media">
+    <video src="assets/video/terrace.mp4" poster="assets/video/terrace_poster.jpg" muted playsinline loop autoplay preload="metadata"></video>
+  </div>
+  <div class="media-overlay"></div>
+  <div class="media-content">
+    <div class="private-box">
+      <p class="eyebrow reveal" data-i18n="priv.eyebrow">your space</p>
+      <h2 class="section-title reveal" id="privTitle" data-i18n="priv.title">Reserve the Room</h2>
+      <p class="reveal" style="line-height:1.9;color:rgba(250,246,240,.92)" data-i18n="priv.copy">The salon and the terrace are yours to book, free of charge. Bring your people; we'll bring the coffee.</p>
+      <ul class="private-list">
+        <li class="reveal" data-i18n="priv.l1">Musicians, come jam on the terrace</li>
+        <li class="reveal" data-i18n="priv.l2">Tech &amp; science meetups in the salon</li>
+        <li class="reveal" data-i18n="priv.l3">Readings, clubs, birthdays, whatever gathers you</li>
+      </ul>
+      <button class="btn-reserve js-open-modal reveal" data-i18n="priv.cta">Reserve the room</button>
+    </div>
+  </div>
+</section>
+
+<!-- FIND US -->
+<section id="findus" aria-labelledby="findTitle">
+  <div class="wrap">
+    <div style="text-align:center">
+      <p class="eyebrow reveal" data-i18n="find.eyebrow">find us</p>
+      <h2 class="section-title reveal" id="findTitle" data-i18n="find.title">Come Visit</h2>
+    </div>
+    <div class="findus-grid">
+      <div>
+        <address class="reveal">248 Rue Villeneuve Ouest<br>Montréal, QC H2T 2R7</address>
+        <div class="hours reveal">
+          <p><span class="d" data-i18n="find.wk">Monday – Friday</span><span>7 am – 8 pm</span></p>
+          <p><span class="d" data-i18n="find.we">Saturday – Sunday</span><span>8 am – 7 pm</span></p>
+        </div>
+        <div class="contact-links reveal">
+          <a href="mailto:caferoxane@gmail.com">caferoxane@gmail.com</a>
+          <a href="tel:+14383753867">(438) 375-3867</a>
+          <a href="https://www.instagram.com/roxane.cafe" target="_blank" rel="noopener">@roxane.cafe</a>
+        </div>
+        <div class="findus-cta reveal">
+          <button class="btn-reserve js-open-modal" data-i18n="find.cta">Reserve the room for an event</button>
+        </div>
+      </div>
+      <div class="map-box reveal">
+        <iframe title="Café Roxane, 248 Rue Villeneuve Ouest, Montréal" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.3152874!2d-73.5987!3d45.5255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91944c5fbe36f%3A0x2e5f3e7b6a5c5d3d!2s248+Rue+Villeneuve+O%2C+Montr%C3%A9al%2C+QC+H2T+2R7!5e0!3m2!1sen!2sca!4v1700000000000!5m2!1sen!2sca"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLOGAN -->
+<section id="slogan" aria-label="God Bless Our Moms">
+  <img class="spoons" src="assets/web/spoons.png" alt="" aria-hidden="true">
+  <p class="slogan-text" id="sloganText">God <span class="em">Bless</span> Our Moms</p>
+  <p class="slogan-sub" data-i18n="slogan.sub">Written on our window, meant from the heart</p>
+</section>
+
+<footer>
+  <div class="socials" style="justify-content:center;margin-bottom:.8rem">
+    <a class="social-link" href="https://www.instagram.com/roxane.cafe" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"></circle></svg>
+    </a>
+    <a class="social-link" href="https://www.facebook.com/people/Roxane-Cafe/61589557692946/" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+    </a>
+  </div>
+  <p>248 Rue Villeneuve Ouest, Montréal, QC H2T 2R7</p>
+  <p><a href="mailto:caferoxane@gmail.com">caferoxane@gmail.com</a> · <a href="tel:+14383753867">(438) 375-3867</a></p>
+  <p style="margin-top:1rem" data-i18n="footer.rights">© 2026 Café Roxane. All rights reserved.</p>
+  <p class="legal-links">
+    <button type="button" data-legal="privacy" data-i18n="legal.privacyLink">Privacy Policy</button> ·
+    <button type="button" data-legal="terms" data-i18n="legal.termsLink">Terms &amp; Conditions</button>
+  </p>
+</footer>
+
+<!-- FOLLOW POPUP (end of scroll, first visit) -->
+<dialog id="followModal" aria-labelledby="followTitle">
+  <div class="follow-grid">
+    <div class="follow-img"><img src="assets/web/cafe_roxane_terasse.webp" alt=""></div>
+    <div class="follow-body">
+      <button class="follow-close" id="followClose" aria-label="Close">&times;</button>
+      <p class="eyebrow" data-i18n="follow.eyebrow">before you go</p>
+      <h3 class="serif" id="followTitle" data-i18n="follow.title">Stay in the loop</h3>
+      <p data-i18n="follow.copy">Jazz on the terrace, new pastries, meetups in the salon: it all lands on our socials first. Follow along so you never miss a thing.</p>
+      <div class="follow-btns">
+        <a class="btn-follow ig" href="https://www.instagram.com/roxane.cafe" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"></circle></svg>
+          <span data-i18n="follow.ig">Follow on Instagram</span>
+        </a>
+        <a class="btn-follow fb" href="https://www.facebook.com/people/Roxane-Cafe/61589557692946/" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          <span data-i18n="follow.fb">Follow on Facebook</span>
+        </a>
+      </div>
+      <button class="follow-no" id="followNo" data-i18n="follow.no">No thanks, just the coffee</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- LEGAL MODAL -->
+<dialog id="legalModal" aria-labelledby="legalTitle">
+  <div class="modal-inner">
+    <div class="modal-head">
+      <h3 id="legalTitle" data-i18n="legal.title">The small print</h3>
+      <button class="modal-close" id="legalClose" aria-label="Close">&times;</button>
+    </div>
+    <h4 id="legalPrivacy" data-i18n="legal.privacyTitle">Privacy Policy</h4>
+    <p data-i18n="legal.privacy1">We're a coffee shop, not a data company. This site uses only essential cookies, enough to remember your language and that you've seen our notices. No tracking, no analytics profiles, no ads.</p>
+    <p data-i18n="legal.privacy2">If you send us a reservation request, we use your name and contact details only to respond to you. We never sell or share your information. To have it deleted, email caferoxane@gmail.com.</p>
+    <h4 id="legalTerms" data-i18n="legal.termsTitle">Terms &amp; Conditions</h4>
+    <p data-i18n="legal.terms1">Menu items and prices may change without notice; the counter has the final word. Reserving the salon or terrace is free; a reservation is only confirmed once our team replies by email.</p>
+    <p data-i18n="legal.terms2">Photos, logo and text on this site belong to Café Roxane. This site is governed by the laws of Québec, Canada. Questions? caferoxane@gmail.com or come say hello at 248 Rue Villeneuve Ouest.</p>
+  </div>
+</dialog>
+
+<!-- RESERVATION MODAL -->
+<dialog id="reserveModal" aria-labelledby="modalTitle">
+  <div class="modal-inner">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow" data-i18n="modal.eyebrow">free to book</p>
+        <h3 id="modalTitle" data-i18n="modal.title">Reserve the room</h3>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    </div>
+    <p class="modal-sub" data-i18n="modal.sub">Tell us about your gathering: jam session, tech meetup, science night, anything. The space is free; you and your guests just eat and drink with us. We'll confirm by email.</p>
+    <form id="reserveForm" novalidate>
+      <div class="field">
+        <label data-i18n="modal.space">Which space?</label>
+        <div class="space-opts">
+          <label class="space-opt"><input type="radio" name="space" value="salon" checked><span data-i18n="modal.salon">The salon <small data-i18n="modal.salonSub">inside, up to 20</small></span></label>
+          <label class="space-opt"><input type="radio" name="space" value="terrace"><span data-i18n="modal.terrace">The terrace <small data-i18n="modal.terraceSub">outside, seasonal</small></span></label>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fDate" data-i18n="modal.date">Date</label>
+          <input type="date" id="fDate" name="date" required>
+        </div>
+        <div class="field">
+          <label for="fSize" data-i18n="modal.size">Party size</label>
+          <input type="number" id="fSize" name="size" min="2" max="40" placeholder="8" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fType" data-i18n="modal.type">What kind of event?</label>
+        <select id="fType" name="type" required>
+          <option value="" data-i18n="modal.typePick">Choose one…</option>
+          <option value="music" data-i18n="modal.typeMusic">Musicians / jam session</option>
+          <option value="tech" data-i18n="modal.typeTech">Technology meetup</option>
+          <option value="science" data-i18n="modal.typeScience">Science meetup</option>
+          <option value="other" data-i18n="modal.typeOther">Something else</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="fName" data-i18n="modal.name">Name</label>
+        <input type="text" id="fName" name="name" autocomplete="name" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="fPhone" data-i18n="modal.phone">Phone</label>
+          <input type="tel" id="fPhone" name="phone" autocomplete="tel" required>
+        </div>
+        <div class="field">
+          <label for="fEmail" data-i18n="modal.email">Email</label>
+          <input type="email" id="fEmail" name="email" autocomplete="email" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="fMsg" data-i18n="modal.msg">Anything we should know?</label>
+        <textarea id="fMsg" name="msg" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn-reserve modal-submit" data-i18n="modal.send">Send request</button>
+      <p class="form-note" data-i18n="modal.note">Your request goes to the Café Roxane team at caferoxane@gmail.com.</p>
+    </form>
+    <div class="confirm" id="confirmBox">
+      <img class="spoons" src="assets/web/spoons.png" alt="">
+      <h4 data-i18n="confirm.title">See you soon.</h4>
+      <p id="confirmSummary"></p>
+      <p data-i18n="confirm.p">The Café Roxane team will confirm your reservation by email shortly.</p>
+    </div>
+  </div>
+</dialog>
+
+<!-- COOKIE NOTICE -->
+<div class="cookie-box" id="cookieBox" role="region" aria-label="Cookie notice">
+  <img class="spoon-mini" src="assets/web/spoons.png" alt="" aria-hidden="true">
+  <p data-i18n="cookies.text">We only use essential cookies, just enough to remember your language. Nothing for tracking or ads.</p>
+  <button class="cookie-ok" id="cookieOk" data-i18n="cookies.ok">Got it</button>
+</div>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/SplitText.min.js"></script>
+<script src="assets/main.js"></script>
+</body>
+</html>
