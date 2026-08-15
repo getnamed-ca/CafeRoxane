@@ -31,17 +31,19 @@ const I18N = {
     "modal.date":"Date","modal.size":"Party size","modal.type":"What kind of event?",
     "modal.typePick":"Choose one…","modal.typeMusic":"Musicians / jam session","modal.typeTech":"Technology meetup","modal.typeScience":"Science meetup","modal.typeOther":"Something else",
     "modal.name":"Name","modal.phone":"Phone","modal.email":"Email","modal.msg":"Anything we should know?",
-    "modal.send":"Send request","modal.note":"Your request goes to the Café Roxane team at caferoxane@gmail.com.",
+    "modal.send":"Send request","modal.sending":"Sending…","modal.note":"Your request goes to the Café Roxane team at caferoxane@gmail.com.",
     "confirm.title":"See you soon.","confirm.p":"The Café Roxane team will confirm your reservation by email shortly.",
+    "error.title":"That didn't go through.","error.p":"Something went wrong on our side. Please write to us directly and we'll sort it out.",
     "hours.wkT":"7 am – 8 pm","hours.weT":"8 am – 7 pm",
-    "cookies.text":"We only use essential cookies, just enough to remember your language. Nothing for tracking or ads.",
-    "cookies.ok":"Got it",
+    "cookies.text":"We use essential cookies to remember your language. With your permission we'd also use Google Analytics to count visits — never for ads, never sold.",
+    "cookies.ok":"Accept",
+    "cookies.no":"Decline",
     "follow.eyebrow":"before you go","follow.title":"Stay in the loop",
     "follow.copy":"Jazz on the terrace, new pastries, meetups in the salon: it all lands on our socials first. Follow along so you never miss a thing.",
     "follow.ig":"Follow on Instagram","follow.fb":"Follow on Facebook","follow.no":"No thanks, just the coffee",
     "legal.privacyLink":"Privacy Policy","legal.termsLink":"Terms & Conditions","legal.title":"The small print",
     "legal.privacyTitle":"Privacy Policy",
-    "legal.privacy1":"We're a coffee shop, not a data company. This site uses only essential cookies, enough to remember your language and that you've seen our notices. No tracking, no analytics profiles, no ads.",
+    "legal.privacy1":"We're a coffee shop, not a data company. Essential cookies remember your language and that you've seen our notices. If you accept our cookie notice, Google Analytics also counts visits so we know how the site is doing; decline and it never loads. No ads, no profiling, nothing sold. You can change your mind by clearing this site's data in your browser.",
     "legal.privacy2":"If you send us a reservation request, we use your name and contact details only to respond to you. We never sell or share your information. To have it deleted, email caferoxane@gmail.com.",
     "legal.termsTitle":"Terms & Conditions",
     "legal.terms1":"Menu items and prices may change without notice; the counter has the final word. Reserving the salon or terrace is free; a reservation is only confirmed once our team replies by email.",
@@ -75,17 +77,19 @@ const I18N = {
     "modal.date":"Date","modal.size":"Nombre de personnes","modal.type":"Quel genre d'événement ?",
     "modal.typePick":"Choisissez…","modal.typeMusic":"Musiciens / jam","modal.typeTech":"Meetup technologie","modal.typeScience":"Meetup science","modal.typeOther":"Autre chose",
     "modal.name":"Nom","modal.phone":"Téléphone","modal.email":"Courriel","modal.msg":"Autre chose à savoir ?",
-    "modal.send":"Envoyer la demande","modal.note":"Votre demande est envoyée à l'équipe du Café Roxane à caferoxane@gmail.com.",
+    "modal.send":"Envoyer la demande","modal.sending":"Envoi…","modal.note":"Votre demande est envoyée à l'équipe du Café Roxane à caferoxane@gmail.com.",
     "confirm.title":"À bientôt.","confirm.p":"L'équipe du Café Roxane confirmera votre réservation par courriel sous peu.",
+    "error.title":"L'envoi n'a pas fonctionné.","error.p":"Un problème est survenu de notre côté. Écrivez-nous directement et nous arrangerons tout.",
     "hours.wkT":"7 h – 20 h","hours.weT":"8 h – 19 h",
-    "cookies.text":"Nous n'utilisons que des témoins essentiels, juste assez pour retenir votre langue. Rien pour le suivi ni la publicité.",
-    "cookies.ok":"Compris",
+    "cookies.text":"Nous utilisons des témoins essentiels pour retenir votre langue. Avec votre permission, nous utiliserions aussi Google Analytics pour compter les visites — jamais pour la publicité, jamais vendus.",
+    "cookies.ok":"Accepter",
+    "cookies.no":"Refuser",
     "follow.eyebrow":"avant de partir","follow.title":"Restez dans la boucle",
     "follow.copy":"Jazz sur la terrasse, nouvelles pâtisseries, meetups au salon : tout paraît d'abord sur nos réseaux. Suivez-nous pour ne rien manquer.",
     "follow.ig":"Suivre sur Instagram","follow.fb":"Suivre sur Facebook","follow.no":"Non merci, juste le café",
     "legal.privacyLink":"Politique de confidentialité","legal.termsLink":"Modalités et conditions","legal.title":"Les petites lignes",
     "legal.privacyTitle":"Politique de confidentialité",
-    "legal.privacy1":"Nous sommes un café, pas une entreprise de données. Ce site n'utilise que des témoins essentiels, assez pour retenir votre langue et le fait que vous avez vu nos avis. Aucun suivi, aucun profilage, aucune publicité.",
+    "legal.privacy1":"Nous sommes un café, pas une entreprise de données. Des témoins essentiels retiennent votre langue et le fait que vous avez vu nos avis. Si vous acceptez notre avis de témoins, Google Analytics compte aussi les visites pour que nous sachions comment se porte le site ; si vous refusez, il ne se charge jamais. Aucune publicité, aucun profilage, rien de vendu. Vous pouvez changer d'avis en effaçant les données de ce site dans votre navigateur.",
     "legal.privacy2":"Si vous nous envoyez une demande de réservation, vos nom et coordonnées ne servent qu'à vous répondre. Nous ne vendons ni ne partageons jamais vos informations. Pour les faire supprimer : caferoxane@gmail.com.",
     "legal.termsTitle":"Modalités et conditions",
     "legal.terms1":"Les items du menu et les prix peuvent changer sans préavis ; le comptoir a le dernier mot. Réserver le salon ou la terrasse est gratuit ; une réservation n'est confirmée qu'à la réponse de notre équipe par courriel.",
@@ -252,36 +256,110 @@ $$(".js-open-modal").forEach(b=>b.addEventListener("click",()=>{
 }));
 $("#modalClose").addEventListener("click",()=>modal.close());
 modal.addEventListener("click",e=>{ if(e.target === modal) modal.close(); });
-form.addEventListener("submit",e=>{
+const errorBox = $("#errorBox"), submitBtn = $("#fSubmit");
+
+/* Reservation delivery.
+   FormSubmit needs no account: the FIRST submission sends an activation email to the
+   address below — click the link in it once and every later request lands in the inbox.
+   FormSubmit also issues a random endpoint token after activation; swapping the address
+   here for that token hides the email address from the page source (less spam). */
+const RESERVATION_ENDPOINT = "https://formsubmit.co/ajax/caferoxane@gmail.com";
+
+form.addEventListener("submit", async e=>{
   e.preventDefault();
   if(!form.reportValidity()) return;
   const data = Object.fromEntries(new FormData(form).entries());
+  if(data._honey) return;                                   /* bot trap */
   const spaceTxt = I18N[lang][data.space==="terrace"?"modal.terrace":"modal.salon"];
   const dateTxt = new Date(data.date+"T12:00:00").toLocaleDateString(lang==="fr"?"fr-CA":"en-CA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-  $("#confirmSummary").textContent = lang==="fr"
-    ? `${spaceTxt} · ${dateTxt} · ${data.size} personnes. Merci ${data.name}!`
-    : `${spaceTxt} · ${dateTxt} · party of ${data.size}. Thank you, ${data.name}!`;
-  form.style.display = "none";
-  confirmBox.style.display = "block";
-  /* DEMO MODE: delivery to caferoxane@gmail.com will be wired to a form service before launch. */
-  console.log("[Roxane] reservation request (demo):", data);
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = I18N[lang]["modal.sending"];
+
+  const payload = {
+    _subject: `Réservation — ${spaceTxt} — ${dateTxt} — ${data.name}`,
+    _template: "table",
+    _captcha: "false",
+    Space: spaceTxt,
+    Date: dateTxt,
+    "Party size": data.size,
+    "Event type": data.type,
+    Name: data.name,
+    Phone: data.phone,
+    Email: data.email,
+    Message: data.msg || "—",
+    Language: lang
+  };
+
+  try {
+    const res = await fetch(RESERVATION_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    $("#confirmSummary").textContent = lang==="fr"
+      ? `${spaceTxt} · ${dateTxt} · ${data.size} personnes. Merci ${data.name}!`
+      : `${spaceTxt} · ${dateTxt} · party of ${data.size}. Thank you, ${data.name}!`;
+    form.style.display = "none";
+    errorBox.style.display = "none";
+    confirmBox.style.display = "block";
+    form.reset();
+  } catch(err) {
+    console.error("[Roxane] reservation delivery failed:", err);
+    const subject = encodeURIComponent(`Reservation — ${spaceTxt} — ${dateTxt}`);
+    const body = encodeURIComponent(
+      `${spaceTxt}\n${dateTxt}\n${data.size}\n${data.type}\n${data.name}\n${data.phone}\n${data.email}\n${data.msg||""}`
+    );
+    $("#errorMail").href = `mailto:caferoxane@gmail.com?subject=${subject}&body=${body}`;
+    form.style.display = "none";
+    confirmBox.style.display = "none";
+    errorBox.style.display = "block";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = I18N[lang]["modal.send"];
+  }
 });
 
-/* ============ cookie notice (essential only) ============ */
+/* ============ cookie notice + consent-gated analytics ============ */
+/* Québec Law 25 / GDPR: Google Analytics is NOT loaded until the visitor accepts.
+   Decline (or no answer) means the gtag.js script is never requested at all. */
 const cookieBox = $("#cookieBox");
-let cookiesAck = false;
-try { cookiesAck = localStorage.getItem("roxane-cookies") === "ok"; } catch(e){}
-if(!cookiesAck) setTimeout(()=>cookieBox.classList.add("show"), 1400);
-$("#cookieOk").addEventListener("click",()=>{
-  try { localStorage.setItem("roxane-cookies","ok"); } catch(e){}
+const CONSENT_KEY = "roxane-consent";           /* "granted" | "denied" */
+let gaLoaded = false;
+
+function loadAnalytics(){
+  if(gaLoaded || !window.ROXANE_GA_ID) return;
+  gaLoaded = true;
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.ROXANE_GA_ID;
+  document.head.appendChild(s);
+  gtag("js", new Date());
+  gtag("config", window.ROXANE_GA_ID, { anonymize_ip: true });
+}
+
+function setConsent(value){
+  try { localStorage.setItem(CONSENT_KEY, value); } catch(e){}
   cookieBox.classList.remove("show");
-});
+  if(value === "granted") loadAnalytics();
+}
+
+let consent = null;
+try { consent = localStorage.getItem(CONSENT_KEY); } catch(e){}
+if(consent === "granted") loadAnalytics();
+else if(consent !== "denied") setTimeout(()=>cookieBox.classList.add("show"), 1400);
+
+$("#cookieOk").addEventListener("click", ()=>setConsent("granted"));
+$("#cookieNo").addEventListener("click", ()=>setConsent("denied"));
 
 /* ============ follow popup (end of scroll, first visit, momofuku-style) ============ */
 const followModal = $("#followModal");
 let followSeen = false;
 try { followSeen = localStorage.getItem("roxane-follow") === "seen"; } catch(e){}
 function maybeShowFollow(){
+  /* don't cover the cookie notice — let the visitor answer it first */
+  if(cookieBox.classList.contains("show")){ setTimeout(maybeShowFollow, 1500); return; }
   if(followSeen || $("#reserveModal").open || followModal.open) return;
   followSeen = true;
   try { localStorage.setItem("roxane-follow","seen"); } catch(e){}

@@ -8,7 +8,19 @@
 <meta property="og:title" content="Café Roxane | Mile End, Montréal">
 <meta property="og:description" content="Relax · Sip · Enjoy. The neighbourhood's front room in Mile End, Montréal.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://caferoxane.com/">
+<meta property="og:image" content="https://caferoxane.com/assets/web/cafe_roxane_front_entrance.webp">
+<meta property="og:locale" content="en_CA">
+<meta property="og:locale:alternate" content="fr_CA">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://caferoxane.com/">
 <link id="favicon" rel="icon" type="image/gif" href="assets/web/favicon.gif">
+<!-- Google Analytics — loaded only after the visitor accepts (see assets/main.js). Property: G-LGHGD0GYJS -->
+<script>
+  window.ROXANE_GA_ID = "G-LGHGD0GYJS";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+</script>
 <link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -230,6 +242,8 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
 .confirm h4{font-family:var(--serif);font-size:1.6rem;font-weight:500;margin-bottom:.8rem}
 .confirm p{font-size:.95rem;max-width:30em;margin:0 auto .6rem}
 .confirm .spoons{width:56px;margin:0 auto 1.4rem}
+.error-mail{font-weight:600;color:var(--ember-bright);text-decoration:underline;text-underline-offset:3px}
+.modal-submit[disabled]{opacity:.6;cursor:progress}
 
 /* ---------- follow popup ---------- */
 #followModal{background:#171310;color:var(--cream);width:min(720px,94vw);border:1px solid rgba(255,119,0,.25)}
@@ -282,6 +296,13 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
   transition:transform .25s,box-shadow .25s}
 .cookie-ok:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(255,119,0,.35)}
 .cookie-ok:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+.cookie-actions{flex:none;display:flex;flex-direction:column;gap:.45rem}
+.cookie-no{background:none;color:rgba(250,246,240,.7);border:1px solid rgba(250,246,240,.25);border-radius:999px;
+  font-size:.72rem;font-weight:600;letter-spacing:.06em;padding:.5rem 1.2rem;min-height:38px;
+  transition:color .25s,border-color .25s}
+.cookie-no:hover{color:var(--cream);border-color:rgba(250,246,240,.6)}
+.cookie-no:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+@media(max-width:520px){.cookie-box{flex-wrap:wrap}.cookie-actions{flex-direction:row;width:100%}.cookie-actions button{flex:1}}
 
 /* ---------- reveal ---------- */
 .reveal{opacity:0;transform:translateY(34px)}
@@ -630,7 +651,8 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
         <label for="fMsg" data-i18n="modal.msg">Anything we should know?</label>
         <textarea id="fMsg" name="msg" rows="3"></textarea>
       </div>
-      <button type="submit" class="btn-reserve modal-submit" data-i18n="modal.send">Send request</button>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
+      <button type="submit" class="btn-reserve modal-submit" id="fSubmit" data-i18n="modal.send">Send request</button>
       <p class="form-note" data-i18n="modal.note">Your request goes to the Café Roxane team at caferoxane@gmail.com.</p>
     </form>
     <div class="confirm" id="confirmBox">
@@ -639,14 +661,23 @@ form input:focus-visible,form select:focus-visible,form textarea:focus-visible,.
       <p id="confirmSummary"></p>
       <p data-i18n="confirm.p">The Café Roxane team will confirm your reservation by email shortly.</p>
     </div>
+    <div class="confirm" id="errorBox">
+      <img class="spoons" src="assets/web/spoons.png" alt="">
+      <h4 data-i18n="error.title">That didn't go through.</h4>
+      <p data-i18n="error.p">Something went wrong on our side. Please write to us directly and we'll sort it out.</p>
+      <p><a class="error-mail" id="errorMail" href="mailto:caferoxane@gmail.com">caferoxane@gmail.com</a></p>
+    </div>
   </div>
 </dialog>
 
 <!-- COOKIE NOTICE -->
 <div class="cookie-box" id="cookieBox" role="region" aria-label="Cookie notice">
   <img class="spoon-mini" src="assets/web/spoons.png" alt="" aria-hidden="true">
-  <p data-i18n="cookies.text">We only use essential cookies, just enough to remember your language. Nothing for tracking or ads.</p>
-  <button class="cookie-ok" id="cookieOk" data-i18n="cookies.ok">Got it</button>
+  <p data-i18n="cookies.text">We use essential cookies to remember your language. With your permission we'd also use Google Analytics to see how many people visit — never for ads, never sold.</p>
+  <div class="cookie-actions">
+    <button class="cookie-ok" id="cookieOk" data-i18n="cookies.ok">Accept</button>
+    <button class="cookie-no" id="cookieNo" data-i18n="cookies.no">Decline</button>
+  </div>
 </div>
 
 <script src="assets/vendor/gsap.min.js"></script>
