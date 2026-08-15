@@ -2,3 +2,6 @@
 .vercel
 node_modules
 *.log
+
+# internal notes — the repo is public, keep these local
+DEPLOY-GUIDE.md
